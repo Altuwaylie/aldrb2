@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>لعبة شد الحبل في جدول الضرب</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     * { box-sizing: border-box; }
 
@@ -13,11 +14,12 @@
       direction: rtl;
       margin: 0;
       background: #f5f5f5;
+      min-height: 100vh;
     }
 
     h1, h2, h3 { margin: 10px 0; }
 
-    .hidden { display: none; }
+    .hidden { display: none !important; }
 
     .btn {
       padding: 12px 24px;
@@ -29,54 +31,84 @@
       background: linear-gradient(135deg, #ff9800, #f44336);
       color: #fff;
       box-shadow: 0 4px 0 #e65100;
-      transition: transform 0.1s, box-shadow 0.1s;
+      transition: transform .1s, box-shadow .1s;
       white-space: nowrap;
+      touch-action: manipulation;
     }
+
     .btn:active {
       transform: translateY(2px);
       box-shadow: 0 2px 0 #e65100;
+    }
+
+    .btn.gray {
+      background: linear-gradient(135deg, #78909c, #546e7a);
+      box-shadow: 0 4px 0 #37474f;
+    }
+
+    .btn.green {
+      background: linear-gradient(135deg, #66bb6a, #43a047);
+      box-shadow: 0 4px 0 #2e7d32;
     }
 
     .option-btn {
       display: block;
       width: 100%;
       margin: 8px auto;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       border-radius: 16px;
+      padding: 14px 10px;
+      transition: transform .2s, box-shadow .2s, background .2s;
     }
 
-    #main-menu, #single-play {
+    #main-menu,
+    #single-play {
       max-width: 600px;
       margin: 0 auto;
       padding: 16px;
     }
 
     #game-card {
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,.95);
       border-radius: 24px;
       padding: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0,0,0,.15);
       margin-top: 12px;
     }
 
     .meta-row {
       display: flex;
       justify-content: space-between;
+      gap: 8px;
       margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-size: .9rem;
+      flex-wrap: wrap;
     }
 
     .badge {
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
       background: #e3f2fd;
-      font-size: 0.8rem;
+      font-size: .85rem;
     }
 
-    /* ===== Versus layout – أفقي ===== */
-    #versus-play {
-      padding: 10px;
+    .badge.error {
+      background: #ffebee;
+      color: #c62828;
     }
+
+    .badge.timer {
+      background: #fff3e0;
+      color: #e65100;
+      font-weight: 700;
+    }
+
+    #single-question {
+      font-size: 2rem;
+      min-height: 48px;
+    }
+
+    #versus-play { padding: 10px; }
 
     #versus-container {
       max-width: 1200px;
@@ -84,28 +116,20 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      height: calc(100vh - 40px);
+      min-height: calc(100vh - 20px);
     }
 
-    /* شريط السؤال بالأعلى */
     #question-bar {
       background: #fff;
       border-radius: 20px;
       padding: 10px 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
     }
 
-    #center-question {
-      font-size: 1.6rem;
-      margin: 4px 0 6px 0;
-    }
-
-    /* منطقة شد الحبل */
     #tug-area {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 4px;
     }
 
     #tug-bar {
@@ -116,36 +140,28 @@
       position: relative;
       border-radius: 999px;
       overflow: hidden;
-      box-shadow: inset 0 0 5px rgba(0,0,0,0.25);
-    }
-
-    #tug-bar::before, #tug-bar::after {
-      content: "";
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 50%;
-    }
-    #tug-bar::before {
-      left: 0;
-      background: linear-gradient(90deg, rgba(3,169,244,0.2), rgba(255,255,255,0));
-    }
-    #tug-bar::after {
-      right: 0;
-      background: linear-gradient(-90deg, rgba(244,67,54,0.2), rgba(255,255,255,0));
+      box-shadow: inset 0 0 5px rgba(0,0,0,.25);
     }
 
     #tug-marker {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       position: absolute;
-      top: -2px;
-      transition: left 0.25s ease-out, background 0.25s;
-      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+      top: -3px;
+      left: calc(50% - 12px);
+      transition: left .35s ease-out, background .25s;
+      box-shadow: 0 0 8px rgba(0,0,0,.4);
       background: #ffc107;
     }
 
-    /* النصفان يمين ويسار */
+    #center-question {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 10px;
+      min-height: 48px;
+    }
+
     #sides-wrapper {
       flex: 1;
       display: flex;
@@ -156,12 +172,12 @@
     .side {
       flex: 1;
       border-radius: 24px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       min-width: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
       position: relative;
     }
 
@@ -174,20 +190,55 @@
     }
 
     .player-title {
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
       margin-bottom: 6px;
+    }
+
+    .big-timer {
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: #c62828;
+      text-shadow: 0 4px 12px rgba(198,40,40,.35);
+      animation: timerPop .9s ease infinite;
+      margin-bottom: 4px;
+    }
+
+    .big-timer.hidden {
+      display: none;
+    }
+
+    @keyframes timerPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+      100% { transform: scale(1); }
     }
 
     .options-column {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       margin-top: 6px;
+      min-height: 210px;
+      justify-content: center;
     }
 
-    .pulse {
-      animation: pulse 0.6s ease-out;
+    .side-answer {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1b5e20;
+      background: #e8f5e9;
+      border-radius: 20px;
+      padding: 18px 10px;
     }
+
+    .side-waiting {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .pulse { animation: pulse .6s ease-out; }
 
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -195,47 +246,72 @@
       100% { transform: scale(1); }
     }
 
-    .shake {
-      animation: shake 0.4s;
-    }
+    .shake { animation: shake .45s; }
+
     @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      50% { transform: translateX(4px); }
-      75% { transform: translateX(-4px); }
-      100% { transform: translateX(0); }
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
     }
 
+    /* الإجابة الصحيحة: أخضر وتكبير واضح */
     .correct {
       background: #4caf50 !important;
-      color: #fff;
-    }
-    .wrong {
-      background: #f44336 !important;
-      color: #fff;
+      color: #fff !important;
+      font-size: 1.8rem !important;
+      transform: scale(1.12);
+      box-shadow: 0 0 0 5px rgba(76,175,80,.45) !important;
+      z-index: 5;
     }
 
-    .player-countdown {
-      position: absolute;
+    /* الإجابات الخاطئة: أحمر */
+    .wrong {
+      background: #f44336 !important;
+      color: #fff !important;
+      opacity: .85;
+    }
+
+    .overlay {
+      position: fixed;
       inset: 0;
-      display: none;
+      background: rgba(0,0,0,.6);
+      display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.5);
-      z-index: 10;
+      padding: 20px;
     }
-    .player-countdown-number {
-      font-size: 3rem;
-      color: #fff;
-      text-shadow: 0 0 15px rgba(0,0,0,0.8);
+
+    #result-overlay { z-index: 9998; }
+    #confirm-overlay { z-index: 10000; }
+
+    .overlay-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .overlay-card h2 { margin-top: 0; }
+
+    .result-list {
+      text-align: right;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      margin: 12px 0;
     }
 
     @media (max-width: 800px) {
-      #versus-container {
-        height: auto;
-      }
-      #sides-wrapper {
-        flex-direction: column;
+      #sides-wrapper { flex-direction: column; }
+      #center-question { font-size: 1.6rem; }
+      .options-column { min-height: 150px; }
+      .side-answer { font-size: 1.8rem; }
+      .big-timer { font-size: 3.2rem; }
+
+      .correct {
+        font-size: 1.5rem !important;
       }
     }
   </style>
@@ -244,25 +320,42 @@
 
   <div id="main-menu">
     <h1>لعبة شد الحبل في جدول الضرب</h1>
-    <p>تحدَّ صديقك أو العب وحدك وتعلّم جدول الضرب من ١ إلى ٩!</p>
-    <button class="btn" onclick="selectMode('single')">لعب فردي</button>
-    <button class="btn" onclick="selectMode('versus')">لعب جماعي (مواجهة)</button>
-  </div>
+    <p>تحدَّ صديقك أو العب وحدك وتعلّم جدول الضرب من ١ إلى ٩!</p>
 
-  <div id="level-select" class="hidden"></div>
+    <button class="btn" onclick="selectMode('single')">لعب فردي</button>
+    <button class="btn" onclick="selectMode('versus')">لعب تنافسي</button>
+  </div>
 
   <div id="single-play" class="hidden">
     <h2>لعب فردي</h2>
+
     <div id="game-card">
       <div class="meta-row">
-        <span class="badge">السؤال: <span id="single-q-index"></span></span>
-        <span class="badge">النقاط: <span id="single-score"></span></span>
+        <span class="badge">
+          السؤال: <span id="single-q-index">٠</span>
+        </span>
+
+        <span class="badge">
+          النقاط: <span id="single-score">٠</span>
+        </span>
+
+        <span class="badge error">
+          الأخطاء: <span id="single-errors">٠</span>
+        </span>
+
+        <span class="badge timer">
+          الوقت: <span id="single-timer">٠٠:٠٠</span>
+        </span>
       </div>
+
       <h3 id="single-question"></h3>
+
       <div id="single-options"></div>
+
       <div style="margin-top:15px;">
-        <button class="btn" onclick="newGame()">بداية جديدة</button>
-        <button class="btn" onclick="goHome()">الرئيسية</button>
+        <button class="btn green" onclick="requestEndSingle()">إنهاء اللعبة</button>
+        <button class="btn" onclick="confirmNewGame()">بداية جديدة</button>
+        <button class="btn gray" onclick="confirmGoHome()">الرئيسية</button>
       </div>
     </div>
   </div>
@@ -271,35 +364,59 @@
     <div id="versus-container">
 
       <div id="question-bar">
-        <div id="center-question"></div>
         <div id="tug-area">
           <div id="tug-bar">
             <div id="tug-marker"></div>
           </div>
         </div>
+
+        <div id="center-question"></div>
+
         <div style="margin-top:8px;">
-          <button class="btn" onclick="newGame()">بداية جديدة</button>
-          <button class="btn" onclick="goHome()">الرئيسية</button>
+          <button class="btn" onclick="confirmNewGame()">بداية جديدة</button>
+          <button class="btn gray" onclick="confirmGoHome()">الرئيسية</button>
         </div>
       </div>
 
       <div id="sides-wrapper">
         <div id="side-left" class="side">
           <div class="player-title">👦 اللاعب الأول</div>
+
+          <div id="p1-big-timer" class="big-timer hidden">٥</div>
+
           <div class="options-column" id="p1-options"></div>
-          <div id="p1-countdown" class="player-countdown">
-            <div class="player-countdown-number" id="p1-countdown-number"></div>
-          </div>
         </div>
 
         <div id="side-right" class="side">
           <div class="player-title">👦 اللاعب الثاني</div>
+
+          <div id="p2-big-timer" class="big-timer hidden">٥</div>
+
           <div class="options-column" id="p2-options"></div>
-          <div id="p2-countdown" class="player-countdown">
-            <div class="player-countdown-number" id="p2-countdown-number"></div>
-          </div>
         </div>
       </div>
+
+    </div>
+  </div>
+
+  <div id="result-overlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2 id="result-title"></h2>
+      <div class="result-list" id="result-details"></div>
+
+      <button class="btn green" onclick="hideResult()">إغلاق</button>
+      <button class="btn" onclick="confirmNewGame()">بداية جديدة</button>
+      <button class="btn gray" onclick="confirmGoHome()">الرئيسية</button>
+    </div>
+  </div>
+
+  <div id="confirm-overlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2 id="confirm-title">تأكيد</h2>
+      <p id="confirm-text"></p>
+
+      <button class="btn green" id="confirm-yes">نعم، تأكيد</button>
+      <button class="btn gray" onclick="hideConfirm()">إلغاء</button>
     </div>
   </div>
 
