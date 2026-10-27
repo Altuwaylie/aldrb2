@@ -128,7 +128,6 @@ function generateMultiplicationQuestion() {
   };
 }
 
-/* نفس الاختيارات للطرفين، لكن بترتيب مختلف */
 function createVersusOptions(question) {
   const sameOptions = [...question.options];
 
@@ -575,9 +574,6 @@ function renderVersusSide(player) {
 
   container.innerHTML = '';
 
-  /* عند إجابة صحيحة:
-     تختفي الاختيارات من الطرفين،
-     وتظهر الإجابة الصحيحة عند الفائز فقط */
   if (versusState.roundLocked) {
     if (versusState.roundWinner === player) {
       const q = versusState.currentQ;
@@ -656,7 +652,6 @@ function handleVersusAnswer(player, chosen, chosenBtn) {
     versusState.p2Correct = isCorrect;
   }
 
-  /* أول إجابة صحيحة تقفل الجولة فورًا */
   if (isCorrect) {
     stopVersusTimer();
 
